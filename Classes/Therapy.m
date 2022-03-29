@@ -249,8 +249,72 @@ classdef Therapy < handle
             showVTA = 1;
             
             if length(thisPair)==2
+                
+                thMat=[]; %create therapy matrix -Pavel
+                
+                for iShortlist = 1:length(order)
+                    item = order(iShortlist);
+                    thMat(iShortlist,1) = predictionList(item).Output; %1st column=improovement
+                    thMat(iShortlist,2) = predictionList(item).Confidence(1); %2nd confidence left
+                    thMat(iShortlist,3) = predictionList(item).Input.VTAs(1).Settings.activecontact; %active contact left
+                    thMat(iShortlist,4) = predictionList(item).Input.VTAs(1).Settings.amplitude; %amplitude left
+                    
+                    
+                   
+                    
+                   
+                    thMat(iShortlist,5) = predictionList(item).Confidence(2); %right side
+                    thMat(iShortlist,6) = predictionList(item).Input.VTAs(2).Settings.activecontact;
+                    thMat(iShortlist,7) = predictionList(item).Input.VTAs(2).Settings.amplitude;
+                    
+                end
+                
+                
+          
+                
+                [DIPS,DIPSalt]= findDIPSsettings(thMat);
+                
+                
                 printtext(fileID,'\t\t\t%s\t%s\n',obj.VTAs(1).ActorElectrode.Tag,obj.VTAs(2).ActorElectrode.Tag);
                 printtext(fileID,'-------------------------------------------\n')
+                if DIPS==[0,0,0,0,0,0,0]
+                    printtext(fileID,'no DIPSsettings found\n')
+                else
+                printtext(fileID,'DIPS\n')
+                    Improv=DIPS(1,1);
+                    c_e1 = DIPS(1,3);
+                    c_e2 = DIPS(1,6);
+                    a_e1 = DIPS(1,4);
+                    a_e2 = DIPS(1,7);
+                    conf_e1 = DIPS(1,2);
+                    conf_e2 = DIPS(1,5);
+                    
+                printtext(fileID,'%i.\t %2.1f \t C%i - %2.1f mA\t C%i - %2.1f mA \t (%2.2f / %2.2f) \n',1,Improv, c_e1,a_e1,c_e2,a_e2,conf_e1,conf_e2) 
+                
+                    
+                if DIPSalt==[0,0,0,0,0,0,0]
+                        printtext(fileID,'no DIPSalt.settings found\n')
+                        
+                else
+                    
+                    
+                    
+                    Improv=DIPSalt(1,1);
+                    c_e1 = DIPSalt(1,3);
+                    c_e2 = DIPSalt(1,6);
+                    a_e1 = DIPSalt(1,4);
+                    a_e2 = DIPSalt(1,7);
+                    conf_e1 = DIPSalt(1,2);
+                    conf_e2 = DIPSalt(1,5);
+                    
+                    printtext(fileID,'%i.\t %2.1f \t C%i - %2.1f mA\t C%i - %2.1f mA \t (%2.2f / %2.2f) \n',2,Improv, c_e1,a_e1,c_e2,a_e2,conf_e1,conf_e2)
+                    end
+                end
+                
+                
+                
+                printtext(fileID,'-------------------------------------------\n')
+                
                 for iShortlist = 1:length(order)
                     item = order(iShortlist);
                     Improv = predictionList(item).Output;

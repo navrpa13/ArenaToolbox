@@ -1,0 +1,6 @@
+			Lead Left Left_VTA	Lead Right Right_VTA
+-------------------------------------------
+DIPS
+no DIPSalt.settings found
+1.	 93.7 	 C1 - 3.0 mA	 C3 - 1.5 mA 	 (1.00 / 0.99) 
+-------------------------------------------
