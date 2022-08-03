@@ -1312,7 +1312,7 @@ classdef ArenaScene < handle
                 for i = indx
                     switch classes{i}
                         case 'Electrode'
-                            thisVTA.ActorsElectrode = obj.Actors(i);
+                            thisVTA.ActorElectrode = obj.Actors(i);
                             thisVTA.Electrode= obj.Actors(i).Data;
                         case 'Mesh'
                             thisVTA.ActorVolume = obj.Actors(i);

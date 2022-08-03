@@ -70,7 +70,9 @@ classdef VTA < handle
             %convert VTA to therapy
             T = Therapy(obj.Tag);
             T.addVTA(obj);
-            T.connectTo(obj.ActorVolume.Scene);
+            if ~isempty(obj.ActorVolume)
+                T.connectTo(obj.ActorVolume.Scene);
+            end
             obj.TherapyReference = T;
          else
             T = obj.TherapyReference;

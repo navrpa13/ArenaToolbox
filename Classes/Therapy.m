@@ -73,7 +73,8 @@ classdef Therapy < handle
                 '60 us - 0.5 mA steps - MDT3389',...
                 '60 us - just 2.5 mA - MDT3389',...
                 '120 us - 0.5 mA steps - MDT3389',...
-                '60 us - just 2 and 4 mA- MDT3389'};
+                '60 us - just 2 and 4 mA- MDT3389',...
+                '120 us - 0.5 mA steps - MDT3387 ALERT'};
             
             answer = listdlg('PromptString','Select monopolar review preset (can be updated in Therapy.m):','ListString',options,'ListSize',[400,100]);
             switch options{answer}
@@ -109,6 +110,12 @@ classdef Therapy < handle
                     contacts = num2cell(1:4);
                 case '120 us - 0.5 mA steps - MDT3389'
                     leadtype = {'Medtronic3389'};
+                    voltagecontrolled = {'False'};
+                    pulsewidths = {120};
+                    amplitudes = num2cell(1.5:0.5:5.5);
+                    contacts = num2cell(1:4);
+                case '120 us - 0.5 mA steps - MDT3387 ALERT'
+                    leadtype = {'Medtronic3387'};
                     voltagecontrolled = {'False'};
                     pulsewidths = {120};
                     amplitudes = num2cell(1.5:0.5:5.5);
@@ -273,7 +280,17 @@ classdef Therapy < handle
           
                 
                 [DIPS,DIPSalt]= findDIPSsettings(thMat);
+                [~,name]=fileparts(currentDir);
+                pics=printSetts(name,DIPS,DIPSalt); %save charts with DIPS settings 
                 
+                for iIm=1:numel(pics)
+                    
+                   fileName=strcat('Setts', num2str(iIm), '.jpg');
+                   fileName=fullfile(currentDir,fileName);
+                   imwrite(pics{iIm},fileName)
+                   
+                   
+                end
                 
                 printtext(fileID,'\t\t\t%s\t%s\n',obj.VTAs(1).ActorElectrode.Tag,obj.VTAs(2).ActorElectrode.Tag);
                 printtext(fileID,'-------------------------------------------\n')
@@ -311,6 +328,8 @@ classdef Therapy < handle
                     end
                 end
                 
+                figure(2)
+                image(pics{1}) %show best sets
                 
                 
                 printtext(fileID,'-------------------------------------------\n')
