@@ -5,13 +5,19 @@ function pics = printSetts(name,varargin)  %saves charts with Stims visualised f
 
 for k=1:numel(varargin) %check format and read settings
     
-   if isnumeric(varargin{k})&&(numel(varargin{k})==7) %old DIPS version format
+    
+  
+        
+        
+  if isnumeric(varargin{k})&&(numel(varargin{k})==7) %old DIPS version format
        
        lc=varargin{k}(1,3);
        rc=varargin{k}(1,6);
        settings{k}.contacts=[3==rc 3==lc;2==rc 2==lc;1==rc 1==lc; 0==rc 0==lc];
        settings{k}.amp.left=varargin{k}(1,4);
        settings{k}.amp.right=varargin{k}(1,7);
+       
+  
        
    else 
        error('Wrong format of setts')
@@ -29,10 +35,10 @@ centers={[725,393] [720,1203];[795,393] [790,1203];[860,393] [860,1203];[930,392
 
 template=imread('chartTemplate.png');
 
-pics=cell(1,numel(varargin));
+pics=cell(1,numel(settings));
 
 
-for iSett=1:numel(varargin)
+for iSett=1:numel(settings)
     
     contacts=centers(settings{iSett}.contacts);
     pics{iSett}=blueCircles(template,40,contacts);
@@ -49,8 +55,8 @@ for iSett=1:numel(varargin)
     
    
     text('units','pixels','position', [160 320], 'fontsize',30,'string',name)
-    text('units','pixels','position', [10 30], 'fontsize',20,'string',num2str(settings{k}.amp.right))
-    text('units','pixels','position', [375 30], 'fontsize',20,'string',num2str(settings{k}.amp.left))
+    text('units','pixels','position', [10 30], 'fontsize',20,'string',num2str(settings{iSett}.amp.right))
+    text('units','pixels','position', [375 30], 'fontsize',20,'string',num2str(settings{iSett}.amp.left))
     text('units','pixels','position', [40 30], 'fontsize',20,'string','mA')
     text('units','pixels','position', [405 30], 'fontsize',20,'string','mA')
     text('units','pixels','position', [15 320], 'fontsize',20,'string',num2str(iSett))

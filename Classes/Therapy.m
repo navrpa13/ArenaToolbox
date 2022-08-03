@@ -277,13 +277,22 @@ classdef Therapy < handle
                 end
                 
                 
-          
+         
                 
                 [DIPS,DIPSalt]= findDIPSsettings(thMat);
                 [~,name]=fileparts(currentDir);
-                pics=printSetts(name,DIPS,DIPSalt); %save charts with DIPS settings 
                 
-                for iIm=1:numel(pics)
+                if (sum(DIPS)~=0)&&(sum(DIPSalt)~=0) %prepare existing setts for printing
+                    
+                pics=printSetts(name,DIPS,DIPSalt); 
+                
+                elseif sum(DIPS)~=0
+                    
+                    pics=printSetts(name,DIPS);
+                    
+                end
+                
+                for iIm=1:numel(pics)        %save charts to the patient dir
                     
                    fileName=strcat('Setts', num2str(iIm), '.jpg');
                    fileName=fullfile(currentDir,fileName);
@@ -329,7 +338,7 @@ classdef Therapy < handle
                 end
                 
                 figure(2)
-                image(pics{1}) %show best sets
+                image(pics{1}) %show best setts
                 
                 
                 printtext(fileID,'-------------------------------------------\n')
