@@ -115,6 +115,12 @@ classdef Therapy < handle
                     pulsewidths = {120};
                     amplitudes = num2cell(1.5:0.5:5.5);
                     contacts = num2cell(1:4);
+                case '120 us - 0.5 mA steps - automatic leaddetection'
+                    leadtype = {nan};
+                    voltagecontrolled = {'False'};
+                    pulsewidths = {120};
+                    amplitudes = num2cell(1.5:0.5:5.5);
+                    contacts = num2cell(1:4);
                 case '60 us - 3.2 mA steps - MDT3389 (cogn. decline monopolar review)'
                     leadtype = {'Medtronic3389'};
                     voltagecontrolled = {'False'};
@@ -150,6 +156,9 @@ classdef Therapy < handle
                 %vta 1
                 electrode1 = obj.VTAs(1).Electrode;
                 vtaname1 = VTAnames{thisPair(1)};
+                if contains(vtaname1,'$')
+                    vtaname1 = strrep(vtaname1,'_$leadtype$_',electrode1.Type);
+                end
                 vta1 = electrode1.makeVTA(vtaname1);
                 vta1.Space = obj.VTAs(1).Space;
                 vta1.Settings = settings(thisPair(1));
@@ -160,6 +169,9 @@ classdef Therapy < handle
                 if length(thisPair)==2
                     electrode2 = obj.VTAs(2).Electrode;
                     vtaname2 = VTAnames{thisPair(2)};
+                    if contains(vtaname2,'$')
+                    	vtaname2 = strrep(vtaname2,'_$leadtype$_',electrode2.Type);
+                    end
                     vta2 = electrode2.makeVTA(vtaname2);
                     vta2.Space = obj.VTAs(2).Space;
                     vta2.Settings = settings(thisPair(2));

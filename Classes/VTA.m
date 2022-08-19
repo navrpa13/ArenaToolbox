@@ -94,6 +94,9 @@ classdef VTA < handle
     
     methods (Static)
         function name = constructVTAname(leadtype,amplitude,pulsewidth,activevector,groundedcontact,voltagecontrolled)
+            if isnan(leadtype)
+                leadtype = '_$leadtype$_';
+            end
                 name = [leadtype,...
                     num2str(amplitude),...
                     num2str(voltagecontrolled),...
