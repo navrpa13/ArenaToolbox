@@ -74,7 +74,8 @@ classdef Therapy < handle
                 '60 us - just 2.5 mA - MDT3389',...
                 '120 us - 0.5 mA steps - MDT3389',...
                 '60 us - just 2 and 4 mA- MDT3389',...
-                '120 us - 0.5 mA steps - MDT3387 ALERT'};
+                '120 us - 0.5 mA steps - MDT3387 ALERT',...
+                '120 us - 0.5 mA steps - automatic leaddetection'};
             
             answer = listdlg('PromptString','Select monopolar review preset (can be updated in Therapy.m):','ListString',options,'ListSize',[400,100]);
             switch options{answer}
@@ -120,6 +121,12 @@ classdef Therapy < handle
                     pulsewidths = {120};
                     amplitudes = num2cell(1.5:0.5:5.5);
                     contacts = num2cell(1:4);
+                case '120 us - 0.5 mA steps - automatic leaddetection'
+                     leadtype = {nan};
+                     voltagecontrolled = {'False'};
+                     pulsewidths = {120};
+                     amplitudes = num2cell(1.5:0.5:5.5);
+                     contacts = num2cell(1:4);
                 otherwise
                     keyboard
             end
@@ -163,6 +170,13 @@ classdef Therapy < handle
                     
                     vtaname1 = VTAnames{thisPair(1)};
                     vtaname2 = VTAnames{thisPair(2)};
+                    
+                    if contains(vtaname1,'$')
+                     vtaname1 = strrep(vtaname1,'_$leadtype$_',electrode1.Type);
+                    end
+                    if contains(vtaname2,'$')
+                     	vtaname2 = strrep(vtaname2,'_$leadtype$_',electrode2.Type);
+                     end
                     
                     vta1 = electrode1.makeVTA(vtaname1);
                     vta1.Space = obj.VTAs(1).Space;
@@ -401,6 +415,9 @@ classdef Therapy < handle
                 i = 0;
                 for iLeadType = 1:numel(leadtype)
                     thisLeadType = leadtype{iLeadType};
+                    if isnan(thisLeadType)
+                        thisLeadType = '_$leadtype$_';
+                    end
                     for iPulseWidth = 1:numel(pulsewidths)
                         thisPulseWidth = pulsewidths{iPulseWidth};
                         for iVoltageControlled  = 1:numel(voltagecontrolled)
